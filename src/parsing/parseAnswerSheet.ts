@@ -51,7 +51,6 @@ export function parseAnswerSheet(questions: Question[], sheetName?: string): Tes
       testResult.answers.push(answer);
     });
 
-    // console.log(JSON.stringify(testResult));
     testResults.push(testResult);
   });
 
