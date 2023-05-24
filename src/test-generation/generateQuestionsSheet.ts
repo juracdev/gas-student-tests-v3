@@ -2,8 +2,8 @@ import { CONSTANTS } from '../constants';
 import { Question, QuestionType } from '../models/Question';
 import { clearStringSpaces } from '../utils/stringUtils';
 
-export function generateQuestionsSheet(quesions: Question[]) {
-  const questSheet = SpreadsheetApp.getActiveSpreadsheet().insertSheet();
+export function generateQuestionsSheet(quesions: Question[], sheetId?: string) {
+  const questSheet = (sheetId ? SpreadsheetApp.openById(sheetId) : SpreadsheetApp.getActive()).insertSheet();
   const sheetName = `Вопросы ${(Math.random() + 1).toString(36).substring(7)}`;
   questSheet.setName(sheetName);
 

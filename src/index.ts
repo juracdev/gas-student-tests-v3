@@ -1,6 +1,7 @@
 import { calculateTestsStats } from './answer-checking/calculateTestsStats';
 import { checkTestResults } from './answer-checking/checkAnswers';
 import { TestResult } from './models/TestResult';
+import { generateTestVariants } from './multi-disc-tests/generateTestVariants';
 import { getTestErrorsReport } from './output/getTestErrorsReport';
 import { writeTestResultsToSheet } from './output/writeTestResultsToSheet';
 import { parseAnswerSheet } from './parsing/parseAnswerSheet';
@@ -49,4 +50,8 @@ function parseDocument(docId: string) {
   parseDocumentAnswers(body, questions);
 
   generateQuestionsSheet(questions);
+}
+
+function createVariants() {
+  generateTestVariants();
 }
