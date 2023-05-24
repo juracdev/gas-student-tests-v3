@@ -33,11 +33,16 @@ export function parseAnswerSheet(questions: Question[], sheetName?: string): Tes
 
       if (q.type === QuestionType.choice || q.type === QuestionType.multiChoice) {
         const givenChoicesIdx: number[] = [];
-        q.choiceVariants!.forEach((chVar, chVarIdx) => {
-          if (answerCell.indexOf(chVar) > -1) {
-            givenChoicesIdx.push(chVarIdx);
-          }
-        });
+        const regStr = `(\\s|^)[${CONSTANTS.CHOICE_VARS_NUMERATORS.join('')}]\\)`;
+        const regExp = new RegExp(regStr, 'g');
+        const match = answerCell.trim().match(regExp);
+        if (!match) throw new Error(`Не найден нумератор в строке "${answerCell}"`);
+        const givenNumerators = match.map((x) => x.trim().replace(')', ''));
+        const givenIndxs = givenNumerators.map((givenNum) =>
+          CONSTANTS.CHOICE_VARS_NUMERATORS.findIndex((num) => num === givenNum)
+        );
+        givenChoicesIdx.push(...givenIndxs);
+
         answer.givenChoiceAnswersIdx = givenChoicesIdx;
       }
 

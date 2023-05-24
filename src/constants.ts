@@ -9,7 +9,8 @@ export const CONSTANTS = {
   GRID_ANSWER_PAIR_LINK: '-',
   GRID_ANSWER_PAIR_DELIMITER: ';',
 
-  CHOICE_VARS_NUMERATORS: ['а', 'б', 'в', 'г', 'д', 'е', 'ё'],
+  /* Используется для распознавания вариантов ответа, НЕ МЕНЯТЬ  */
+  CHOICE_VARS_NUMERATORS: ['а', 'б', 'в', 'г', 'д', 'е', 'ж', 'з', 'и', 'к'],
 
   SHEET_ANSWER_NAME: 'Ответы на форму',
   SHEET_CHECKED_NAME: 'Проверенные',
