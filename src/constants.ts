@@ -1,10 +1,17 @@
 export const CONSTANTS = {
   /*  Разделитель вариантов ответа для вопросов с выбором ответа */
   CHOICE_VARIANTS_DELIMITER: ';',
-  CHOICE_OPTIONS_DELIMITER: '&',
 
   /* Разделитель правильных ответов для вопросов с множественным выбором */
   CHOICE_ANSWERS_DELIMITER: ';',
+
+  /*  Разделитель ключей для текстовых вопросов */
+  TEXT_KEYS_DELIMITER: ';',
+  /*  Разделитель значений одного ключа для текстовых вопросов */
+  TEXT_KEY_VALUES_DELIMITER: '&',
+
+  /*  Значение в таблице вопросов, указывающее на необходимость проверки порядка ключей */
+  TEXT_IS_KEY_ORDERED_CELL_VALUE: 'да',
 
   GRID_ANSWER_PAIR_LINK: '-',
   GRID_ANSWER_PAIR_DELIMITER: ';',

@@ -16,7 +16,8 @@ export function generateQuestionsSheet(quesions: Question[]) {
   let currentRow = 2;
 
   quesions.forEach((quest) => {
-    questSheet.getRange(currentRow, 1, 1, 5).setValues([getSheetRow(quest)]);
+    const sheetRow = getSheetRow(quest);
+    questSheet.getRange(currentRow, 1, 1, sheetRow.length).setValues([sheetRow]);
     currentRow++;
   });
 }
@@ -38,5 +39,26 @@ function getSheetRow(quest: Question): (string | number)[] {
       ? quest.choiceAnswersIdx!.map((x) => x + 1).join(CONSTANTS.CHOICE_ANSWERS_DELIMITER)
       : quest.correctAnsText!;
 
-  return [quest.number, type, quest.questText, rightAnswer, variantsStr];
+  const sheetRow = [quest.number, type, quest.questText, rightAnswer, variantsStr];
+
+  if (quest.type === QuestionType.text) {
+    let keys: string[];
+
+    if (quest.keys && quest.keys.length > 0) {
+      keys = quest.keys.map((key) =>
+        key.values.length > 1 ? `[${key.values.join(` ${CONSTANTS.TEXT_KEY_VALUES_DELIMITER} `)}]` : key.values[0]
+      );
+    } else {
+      keys = quest.correctAnsText!.split(' ').map((x) => x.trim().toLowerCase());
+    }
+
+    const keysStr = keys.join(`${CONSTANTS.TEXT_KEYS_DELIMITER} `);
+    sheetRow.push(keysStr);
+
+    if (quest.isKeysOrdered) {
+      sheetRow.push(CONSTANTS.TEXT_IS_KEY_ORDERED_CELL_VALUE);
+    }
+  }
+
+  return sheetRow;
 }

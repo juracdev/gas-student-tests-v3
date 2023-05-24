@@ -43,7 +43,7 @@ export function parseQuestionSheet(sheetId?: string): Question[] {
     if (type === QuestionType.text) {
       question.correctAnsText = clearStringSpaces(ansCell);
       question.keys = parseTextKeys(keysCell);
-      question.isKeysOrdered = isKeysOrderedCell.trim().toLowerCase() === 'да';
+      question.isKeysOrdered = isKeysOrderedCell.trim().toLowerCase() === CONSTANTS.TEXT_IS_KEY_ORDERED_CELL_VALUE;
     }
 
     /*  grid */
@@ -85,12 +85,12 @@ function parseGridVariants(varCell: string): ParsedGridVariants {
 }
 
 function parseTextKeys(keysCell: string): TextQuestionKey[] {
-  const keyStrings = keysCell.split(CONSTANTS.CHOICE_VARIANTS_DELIMITER).map((x) => clearStringSpaces(x));
+  const keyStrings = keysCell.split(CONSTANTS.TEXT_KEYS_DELIMITER).map((x) => clearStringSpaces(x));
 
   return keyStrings.map((keyStr) => {
     const isMultipleKeys = /\[.+\]/.test(keyStr);
     const values = isMultipleKeys
-      ? keyStr.split(CONSTANTS.CHOICE_OPTIONS_DELIMITER).map((k) => k.trim().replace(/[\[\]]/g, ''))
+      ? keyStr.split(CONSTANTS.TEXT_KEY_VALUES_DELIMITER).map((k) => k.trim().replace(/[\[\]]/g, ''))
       : [keyStr];
 
     return {
