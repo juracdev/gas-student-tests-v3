@@ -9,7 +9,11 @@ interface FindTextKeysResult {
 }
 
 export function checkTextAnswer(ans: Answer): CheckedResult {
-  const { foundKeys, unfoundKeys, isCorrectOrder } = findTextKeys(ans.givenText!, ans.quest.keys!);
+  const { foundKeys, unfoundKeys, isCorrectOrder } = findTextKeys(
+    ans.givenText!,
+    ans.quest.keys!,
+    ans.quest.isKeysOrdered!
+  );
 
   return {
     isError: unfoundKeys.length > 0 || (ans.quest.isKeysOrdered! && !isCorrectOrder),
@@ -19,7 +23,7 @@ export function checkTextAnswer(ans: Answer): CheckedResult {
   };
 }
 
-function findTextKeys(givenText: string, keys: TextQuestionKey[]): FindTextKeysResult {
+function findTextKeys(givenText: string, keys: TextQuestionKey[], isKeysOrdered: boolean): FindTextKeysResult {
   const foundKeys: TextQuestionKey[] = [];
   const unfoundKeys: TextQuestionKey[] = [];
   let lastFoundIdx = 0;
@@ -30,7 +34,7 @@ function findTextKeys(givenText: string, keys: TextQuestionKey[]): FindTextKeysR
 
     if (result.index > -1) {
       foundKeys.push(key);
-      if (result.index < lastFoundIdx) isCorrectOrder = false;
+      if (isKeysOrdered && result.index < lastFoundIdx) isCorrectOrder = false;
       lastFoundIdx = result.index;
     } else {
       unfoundKeys.push(key);

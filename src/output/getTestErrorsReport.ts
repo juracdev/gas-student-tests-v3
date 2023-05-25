@@ -78,8 +78,10 @@ function stringifyError(ans: Answer): string {
     const variants = quest.choiceVariants!;
     const correctIdxs = quest.choiceAnswersIdx!;
     const givenIdxs = ans.givenChoiceAnswersIdx!;
-    const correctText = correctIdxs.map(idx => `${CONSTANTS.CHOICE_VARS_NUMERATORS[idx]}) ${variants[idx]}`).join('; ');
-    const givenText = givenIdxs.map(idx => `${CONSTANTS.CHOICE_VARS_NUMERATORS[idx]}) ${variants[idx]}`).join('; ');
+    const correctText = correctIdxs
+      .map((idx) => `${CONSTANTS.CHOICE_VARS_NUMERATORS[idx]}) ${variants[idx]}`)
+      .join('; ');
+    const givenText = givenIdxs.map((idx) => `${CONSTANTS.CHOICE_VARS_NUMERATORS[idx]}) ${variants[idx]}`).join('; ');
     result += `Правильный ответ: ${correctText}\nДан ответ: ${givenText}`;
   }
 
@@ -87,7 +89,7 @@ function stringifyError(ans: Answer): string {
     const foundKeys = ans.checkedResult!.foundKeys!.map((key) => stringifyTextKeys(key.values)).join('; ');
     const unfoundKeys = ans.checkedResult!.unfoundKeys!.map((key) => stringifyTextKeys(key.values)).join('; ');
     result += `Правильный ответ: ${quest.correctAnsText}\nДан ответ: ${ans.givenText}\nНайденные ключи: ${foundKeys}\nОтсутствующие ключи: ${unfoundKeys}`;
-    if (!ans.checkedResult!.isCorrectOrder) {
+    if (ans.checkedResult!.isCorrectOrder === false) {
       result += '\nПорядок ключей неправильный!';
     }
   }

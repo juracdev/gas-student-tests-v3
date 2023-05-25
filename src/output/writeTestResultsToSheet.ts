@@ -36,5 +36,7 @@ export function writeTestResultsToSheet(reports: TestErrorsRepot[]) {
     checkedSheet
       .getRange(currentRow, 1, 1, 5)
       .setValues([[studentName, percentage, details, choiceErrors.join('\n\n'), textErrors.join('\n\n')]]);
+
+    currentRow++;
   });
 }
