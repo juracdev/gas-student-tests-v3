@@ -1,5 +1,7 @@
 import { calculateTestsStats } from './answer-checking/calculateTestsStats';
 import { checkTestResults } from './answer-checking/checkAnswers';
+import { combineTestResultsFromSheets } from './features/test-results/combined-results/combineTestResultsFromSheets';
+import { getTestResults } from './features/test-results/getTestResults';
 import { TestResult } from './models/TestResult';
 import { generateTestVariants } from './multi-disc-tests/generateTestVariants';
 import { getTestErrorsReport } from './output/getTestErrorsReport';
@@ -10,16 +12,6 @@ import { parseDocumentQuestions } from './parsing/parseDocumentQuestions';
 import { parseQuestionSheet } from './parsing/parseQuestionSheet';
 import { generateQuestionsSheet } from './test-generation/generateQuestionsSheet';
 import { generateTestForm } from './test-generation/generateTestForm';
-
-function checkAns(): TestResult[] {
-  const questions = parseQuestionSheet();
-  const testResults = parseAnswerSheet(questions);
-
-  checkTestResults(testResults);
-  calculateTestsStats(testResults);
-
-  return testResults;
-}
 
 /*  Функции для вызова из внешнего проекта */
 
@@ -37,7 +29,7 @@ function generateForm() {
 }
 
 function writeCheckedToSheet() {
-  const testResults = checkAns();
+  const testResults = getTestResults();
   const errorReports = getTestErrorsReport(testResults);
   writeTestResultsToSheet(errorReports);
 }
@@ -54,4 +46,8 @@ function parseDocument(docId: string) {
 
 function createVariants() {
   generateTestVariants();
+}
+
+function combineResults() {
+  combineTestResultsFromSheets();
 }

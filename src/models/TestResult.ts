@@ -3,6 +3,7 @@ import { Answer } from './Answer';
 export interface TestResult {
   studentFirstname: string;
   studentLastname: string;
+  passedAt: Date;
 
   answers: Answer[];
   stats?: TestResultStats;

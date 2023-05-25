@@ -4,9 +4,11 @@ import { GridAnswers, Question, QuestionType } from '../models/Question';
 import { TestResult } from '../models/TestResult';
 import { clearStringSpaces } from '../utils/stringUtils';
 
-export function parseAnswerSheet(questions: Question[], sheetName?: string): TestResult[] {
+export function parseAnswerSheet(questions: Question[], sheetId?: string): TestResult[] {
   const testResults: TestResult[] = [];
-  const ansSheet = SpreadsheetApp.getActive().getSheetByName(sheetName || CONSTANTS.SHEET_ANSWER_NAME);
+  const ansSheet = (sheetId ? SpreadsheetApp.openById(sheetId) : SpreadsheetApp.getActive()).getSheetByName(
+    CONSTANTS.SHEET_ANSWER_NAME
+  );
 
   const [titlesRow, ...rows] = ansSheet!.getDataRange().getValues();
   const questTitles = titlesRow.slice(CONSTANTS.COLS_BEFORE_ANSWERS);
@@ -18,6 +20,7 @@ export function parseAnswerSheet(questions: Question[], sheetName?: string): Tes
       studentFirstname: firstname,
       studentLastname: lastname,
       answers: [],
+      passedAt: new Date(timestamp),
     };
 
     questions.forEach((q) => {
