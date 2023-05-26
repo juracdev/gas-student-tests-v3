@@ -5,6 +5,7 @@ import { getTestResults } from './features/test-results/getTestResults';
 import { TestResult } from './models/TestResult';
 import { generateTestVariants } from './multi-disc-tests/generateTestVariants';
 import { getTestErrorsReport } from './output/getTestErrorsReport';
+import { writeTestResultsToDoc } from './output/writeTestResultsToDoc';
 import { writeTestResultsToSheet } from './output/writeTestResultsToSheet';
 import { parseAnswerSheet } from './parsing/parseAnswerSheet';
 import { parseDocumentAnswers } from './parsing/parseDocumentAnswers';
@@ -12,6 +13,7 @@ import { parseDocumentQuestions } from './parsing/parseDocumentQuestions';
 import { parseQuestionSheet } from './parsing/parseQuestionSheet';
 import { generateQuestionsSheet } from './test-generation/generateQuestionsSheet';
 import { generateTestForm } from './test-generation/generateTestForm';
+import { createDoc } from './utils/docUtils';
 
 /*  Функции для вызова из внешнего проекта */
 
@@ -50,4 +52,25 @@ function createVariants() {
 
 function combineResults() {
   combineTestResultsFromSheets();
+}
+
+function writeCheckedToDoc() {
+  const testResults = getTestResults();
+  const errorReports = getTestErrorsReport(testResults);
+
+  const activeSheet = SpreadsheetApp.getActive();
+  const ssFile = DriveApp.getFileById(activeSheet.getId());
+
+  const folders = ssFile.getParents();
+  const parentFolderId = folders.hasNext() ? folders.next().getId() : undefined;
+
+  errorReports.forEach((er) => {
+    const date = er.passedAt;
+    const doc = createDoc({
+      title: `${er.lastName} ${er.testTitle} (${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()})`,
+      dirId: parentFolderId,
+    });
+    const body = doc.getBody();
+    writeTestResultsToDoc([er], body);
+  });
 }

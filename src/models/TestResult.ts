@@ -1,6 +1,7 @@
 import { Answer } from './Answer';
 
 export interface TestResult {
+  testTitle: string;
   studentFirstname: string;
   studentLastname: string;
   passedAt: Date;

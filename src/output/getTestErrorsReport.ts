@@ -4,8 +4,10 @@ import { QuestionType } from '../models/Question';
 import { TestResult } from '../models/TestResult';
 
 export interface TestErrorsRepot {
+  testTitle: string;
   firstName: string;
   lastName: string;
+  passedAt: Date;
   percentage: number;
   correctAnsAmount: number;
   incorrectAnsAmount: number;
@@ -24,8 +26,10 @@ export function getTestErrorsReport(testResults: TestResult[]): TestErrorsRepot[
     const textErrors = ansGroups.textErrors.map(stringifyError);
 
     const report: TestErrorsRepot = {
+      testTitle: tr.testTitle,
       lastName: tr.studentLastname,
       firstName: tr.studentFirstname,
+      passedAt: tr.passedAt,
       correctAnsAmount,
       incorrectAnsAmount,
       percentage,

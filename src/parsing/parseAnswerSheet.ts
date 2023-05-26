@@ -6,9 +6,8 @@ import { clearStringSpaces } from '../utils/stringUtils';
 
 export function parseAnswerSheet(questions: Question[], sheetId?: string): TestResult[] {
   const testResults: TestResult[] = [];
-  const ansSheet = (sheetId ? SpreadsheetApp.openById(sheetId) : SpreadsheetApp.getActive()).getSheetByName(
-    CONSTANTS.SHEET_ANSWER_NAME
-  );
+  const ss = sheetId ? SpreadsheetApp.openById(sheetId) : SpreadsheetApp.getActive();
+  const ansSheet = ss.getSheetByName(CONSTANTS.SHEET_ANSWER_NAME);
 
   const [titlesRow, ...rows] = ansSheet!.getDataRange().getValues();
   const questTitles = titlesRow.slice(CONSTANTS.COLS_BEFORE_ANSWERS);
@@ -17,6 +16,7 @@ export function parseAnswerSheet(questions: Question[], sheetId?: string): TestR
     const [timestamp, lastname, firstname, ...ansRow] = row;
 
     const testResult: TestResult = {
+      testTitle: ss.getName(),
       studentFirstname: firstname,
       studentLastname: lastname,
       answers: [],
