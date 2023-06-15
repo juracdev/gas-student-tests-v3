@@ -7,18 +7,17 @@ import { createSheet } from '../utils/sheetUtils';
 // Сделать выбор директории
 // Сделать размер варианта внешним параметром
 
-export function generateTestVariants() {
+export function generateTestVariants(varSize: number) {
   const settings = parseVariantsSettings();
 
   let questions = combineQuestionsFromSheets(settings);
 
   questions = questions.sort(() => Math.random() - 0.5);
 
-  const VAR_SIZE = 31;
-  const varAmounts = Math.ceil(questions.length / VAR_SIZE);
+  const varAmounts = Math.ceil(questions.length / varSize);
 
   for (let i = 0; i < varAmounts; i++) {
-    const slice = questions.slice(i * VAR_SIZE, (i + 1) * VAR_SIZE);
+    const slice = questions.slice(i * varSize, (i + 1) * varSize);
     createVariantSheet(slice);
   }
 }

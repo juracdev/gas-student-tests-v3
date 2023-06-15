@@ -46,8 +46,8 @@ function parseDocument(docId: string) {
   generateQuestionsSheet(questions);
 }
 
-function createVariants() {
-  generateTestVariants();
+function createVariants(varSize: number) {
+  generateTestVariants(varSize);
 }
 
 function combineResults() {
