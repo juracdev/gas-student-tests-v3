@@ -13,6 +13,8 @@ function clearNumber(question: string): string {
   return question.replace(/^\d+\./, '').trim();
 }
 
+/* Парсит вопросы записанные в документе построчно */
+
 export function parseDocumentQuestions(body: GoogleAppsScript.Document.Body): Question[] {
   let qNumber = 1;
   let findRange: GoogleAppsScript.Document.RangeElement | null = null;

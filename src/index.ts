@@ -9,6 +9,7 @@ import { writeTestResultsToDoc } from './output/writeTestResultsToDoc';
 import { writeTestResultsToSheet } from './output/writeTestResultsToSheet';
 import { parseAnswerSheet } from './parsing/parseAnswerSheet';
 import { parseDocumentAnswers } from './parsing/parseDocumentAnswers';
+import { parseDocumentQAWithTableFormat } from './parsing/parseDocumentQAWithTableFormat';
 import { parseDocumentQuestions } from './parsing/parseDocumentQuestions';
 import { parseQuestionSheet } from './parsing/parseQuestionSheet';
 import { generateQuestionsSheet } from './test-generation/generateQuestionsSheet';
@@ -43,6 +44,14 @@ function parseDocument(docId: string) {
   const questions = parseDocumentQuestions(body);
   parseDocumentAnswers(body, questions);
 
+  generateQuestionsSheet(questions);
+}
+
+function parseDocumentWithTableFormat(docId: string) {
+  const doc = DocumentApp.openById(docId);
+  const body = doc.getBody();
+
+  const questions = parseDocumentQAWithTableFormat(body);
   generateQuestionsSheet(questions);
 }
 

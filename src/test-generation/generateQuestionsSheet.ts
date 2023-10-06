@@ -22,6 +22,17 @@ export function generateQuestionsSheet(quesions: Question[], sheetId?: string) {
   });
 }
 
+function filterCreatedKey(key: string): boolean {
+  return key.length > 2;
+}
+
+function transformCreatedKey(key: string): string {
+  return key
+    .trim()
+    .toLowerCase()
+    .replace(/["().,;:!?«»-]/g, '');
+}
+
 function getSheetRow(quest: Question): (string | number)[] {
   const type = quest.type === QuestionType.text ? 'текст' : 'выбор';
 
@@ -49,7 +60,7 @@ function getSheetRow(quest: Question): (string | number)[] {
         key.values.length > 1 ? `[${key.values.join(` ${CONSTANTS.TEXT_KEY_VALUES_DELIMITER} `)}]` : key.values[0]
       );
     } else {
-      keys = quest.correctAnsText!.split(' ').map((x) => x.trim().toLowerCase());
+      keys = quest.correctAnsText!.split(' ').map(transformCreatedKey).filter(filterCreatedKey);
     }
 
     const keysStr = keys.join(`${CONSTANTS.TEXT_KEYS_DELIMITER} `);
