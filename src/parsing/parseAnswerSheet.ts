@@ -2,7 +2,7 @@ import { CONSTANTS } from '../constants';
 import { Answer } from '../models/Answer';
 import { GridAnswers, Question, QuestionType } from '../models/Question';
 import { TestResult } from '../models/TestResult';
-import { clearStringSpaces } from '../utils/stringUtils';
+import { clearStringSpaces, upperFirstLetter } from '../utils/stringUtils';
 
 export function parseAnswerSheet(questions: Question[], sheetId?: string): TestResult[] {
   const testResults: TestResult[] = [];
@@ -17,8 +17,8 @@ export function parseAnswerSheet(questions: Question[], sheetId?: string): TestR
 
     const testResult: TestResult = {
       testTitle: ss.getName(),
-      studentFirstname: firstname,
-      studentLastname: lastname,
+      studentFirstname: upperFirstLetter(firstname),
+      studentLastname: upperFirstLetter(lastname),
       answers: [],
       passedAt: new Date(timestamp),
     };

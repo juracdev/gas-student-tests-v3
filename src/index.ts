@@ -1,17 +1,15 @@
-import { calculateTestsStats } from './answer-checking/calculateTestsStats';
-import { checkTestResults } from './answer-checking/checkAnswers';
 import { combineTestResultsFromSheets } from './features/test-results/combined-results/combineTestResultsFromSheets';
 import { getTestResults } from './features/test-results/getTestResults';
-import { TestResult } from './models/TestResult';
 import { generateTestVariants } from './multi-disc-tests/generateTestVariants';
 import { getTestErrorsReport } from './output/getTestErrorsReport';
 import { writeTestResultsToDoc } from './output/writeTestResultsToDoc';
 import { writeTestResultsToSheet } from './output/writeTestResultsToSheet';
-import { parseAnswerSheet } from './parsing/parseAnswerSheet';
 import { parseDocumentAnswers } from './parsing/parseDocumentAnswers';
 import { parseDocumentQAWithTableFormat } from './parsing/parseDocumentQAWithTableFormat';
 import { parseDocumentQuestions } from './parsing/parseDocumentQuestions';
+import { parseManualCheckSheet } from './parsing/parseManualCheckSheet';
 import { parseQuestionSheet } from './parsing/parseQuestionSheet';
+import { generateManualCheckSheet } from './test-generation/generateManualCheckSheet';
 import { generateQuestionsSheet } from './test-generation/generateQuestionsSheet';
 import { generateTestForm } from './test-generation/generateTestForm';
 import { createDoc } from './utils/docUtils';
@@ -29,6 +27,12 @@ function generateForm() {
   const questions = parseQuestionSheet();
 
   generateTestForm(questions, formName, parentFolderId);
+}
+
+function generateManualCheckRules() {
+  const testResults = getTestResults();
+  const lastNames = testResults.map((tr) => tr.studentLastname);
+  generateManualCheckSheet(lastNames);
 }
 
 function writeCheckedToSheet() {
@@ -53,6 +57,11 @@ function parseDocumentWithTableFormat(docId: string) {
 
   const questions = parseDocumentQAWithTableFormat(body);
   generateQuestionsSheet(questions);
+}
+
+function parseManualCheckRules() {
+  const rules = parseManualCheckSheet();
+  console.log(JSON.stringify(rules));
 }
 
 function createVariants(varSize: number) {

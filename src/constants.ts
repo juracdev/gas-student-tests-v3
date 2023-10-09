@@ -16,11 +16,15 @@ export const CONSTANTS = {
   GRID_ANSWER_PAIR_LINK: '-',
   GRID_ANSWER_PAIR_DELIMITER: ';',
 
+  /*  Разделитель между условиями в таблице ручной проверки*/
+  MANUAL_CHECK_RULES_DELIMITER: ';',
+
   /* Используется для распознавания вариантов ответа, НЕ МЕНЯТЬ  */
   CHOICE_VARS_NUMERATORS: ['а', 'б', 'в', 'г', 'д', 'е', 'ж', 'з', 'и', 'к'],
 
   SHEET_ANSWER_NAME: 'Ответы на форму',
   SHEET_CHECKED_NAME: 'Проверенные',
+  SHEET_MANUAL_CHECK_RULES_NAME: 'Ручная проверка',
 
   /*  Кол-во колонок слева от колонок с вопросами (время, имя, фамилия) */
   COLS_BEFORE_ANSWERS: 3,

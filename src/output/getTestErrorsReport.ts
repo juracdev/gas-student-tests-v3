@@ -57,7 +57,8 @@ function splitAnswersByGroups(answers: Answer[]): AnswersGroups {
   };
 
   answers.forEach((ans) => {
-    if (!ans.checkedResult!.isError) return;
+    const isError = ans.manualCheckedResult ? ans.manualCheckedResult.isError : ans.checkedResult!.isError;
+    if (!isError) return;
 
     if (ans.quest.type === QuestionType.text) {
       result.textErrors.push(ans);
@@ -79,26 +80,50 @@ function stringifyError(ans: Answer): string {
   let result = `Вопрос №${quest.number}. ${quest.questText}\n`;
 
   if (ans.quest.type === QuestionType.choice || ans.quest.type === QuestionType.multiChoice) {
-    const variants = quest.choiceVariants!;
-    const correctIdxs = quest.choiceAnswersIdx!;
-    const givenIdxs = ans.givenChoiceAnswersIdx!;
-    const correctText = correctIdxs
-      .map((idx) => `${CONSTANTS.CHOICE_VARS_NUMERATORS[idx]}) ${variants[idx]}`)
-      .join('; ');
-    const givenText = givenIdxs.map((idx) => `${CONSTANTS.CHOICE_VARS_NUMERATORS[idx]}) ${variants[idx]}`).join('; ');
-    result += `Правильный ответ: ${correctText}\nДан ответ: ${givenText}`;
+    result += stringifyChoice(ans);
   }
 
   if (ans.quest.type === QuestionType.text) {
+    result += stringifyText(ans);
+  }
+
+  // TODO добавить строку для сетки
+
+  return result;
+}
+
+function stringifyChoice(ans: Answer): string {
+  const quest = ans.quest;
+  let result = '';
+
+  const variants = quest.choiceVariants!;
+  const correctIdxs = quest.choiceAnswersIdx!;
+  const givenIdxs = ans.givenChoiceAnswersIdx!;
+  const correctText = correctIdxs.map((idx) => `${CONSTANTS.CHOICE_VARS_NUMERATORS[idx]}) ${variants[idx]}`).join('; ');
+  const givenText = givenIdxs.map((idx) => `${CONSTANTS.CHOICE_VARS_NUMERATORS[idx]}) ${variants[idx]}`).join('; ');
+  result += `Правильный ответ: ${correctText}\nДан ответ: ${givenText}`;
+
+  if (ans.manualCheckedResult) {
+    result += '\nОтмечен неправильным при ручной проверке.';
+  }
+
+  return result;
+}
+
+function stringifyText(ans: Answer): string {
+  const quest = ans.quest;
+  let result = `Правильный ответ: ${quest.correctAnsText}\nДан ответ: ${ans.givenText}`;
+
+  if (ans.manualCheckedResult) {
+    result += '\nОтмечен неправильным при ручной проверке.';
+  } else {
     const foundKeys = ans.checkedResult!.foundKeys!.map((key) => stringifyTextKeys(key.values)).join('; ');
     const unfoundKeys = ans.checkedResult!.unfoundKeys!.map((key) => stringifyTextKeys(key.values)).join('; ');
-    result += `Правильный ответ: ${quest.correctAnsText}\nДан ответ: ${ans.givenText}\nНайденные ключи: ${foundKeys}\nОтсутствующие ключи: ${unfoundKeys}`;
+    result += `\nНайденные ключи: ${foundKeys}\nОтсутствующие ключи: ${unfoundKeys}`;
     if (ans.checkedResult!.isCorrectOrder === false) {
       result += '\nПорядок ключей неправильный!';
     }
   }
-
-  // TODO добавить строку для сетки
 
   return result;
 }
