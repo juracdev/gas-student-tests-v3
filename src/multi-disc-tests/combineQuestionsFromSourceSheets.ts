@@ -1,17 +1,12 @@
 /*  Собрать вопросы из нескольких файлов таблиц */
 
-import { Question, QuestionType } from '../../models/Question';
-import { parseQuestionSheet } from '../../parsing/parseQuestionSheet';
-
-interface CombinedSheetOptions {
-  sheetId: string;
-  sheetTitle: string;
-  questTypes?: QuestionType[];
-}
+import { Question } from '../models/Question';
+import { parseQuestionSheet } from '../parsing/parseQuestionSheet';
+import { SourceSheetsSettings } from './parsing/parseSourceSheetsSettings';
 
 export type CombinedQuiestion = Question & { sheetTitle: string };
 
-export function combineQuestionsFromSheets(options: CombinedSheetOptions[]): CombinedQuiestion[] {
+export function combineQuestionsFromSourceSheets(options: SourceSheetsSettings[]): CombinedQuiestion[] {
   const result: CombinedQuiestion[] = [];
 
   options.forEach(({ sheetId, sheetTitle, questTypes }) => {

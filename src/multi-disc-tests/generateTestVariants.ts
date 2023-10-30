@@ -1,7 +1,8 @@
-import { CombinedQuiestion, combineQuestionsFromSheets } from '../features/questions/combineQuestionsFromSheets';
-import { QuestionType, questionTypesMap } from '../models/Question';
 import { generateQuestionsSheet } from '../test-generation/generateQuestionsSheet';
 import { createSheet } from '../utils/sheetUtils';
+import { CombinedQuiestion, combineQuestionsFromSourceSheets } from './combineQuestionsFromSourceSheets';
+import { parseSourceSheetsSettings } from './parsing/parseSourceSheetsSettings';
+import { parseVariantsSettings } from './parsing/parseVariantsSettings';
 
 // TODO
 // Сделать выбор директории
@@ -9,17 +10,20 @@ import { createSheet } from '../utils/sheetUtils';
 
 export function generateTestVariants(varSize: number) {
   const settings = parseVariantsSettings();
+  console.log(JSON.stringify(settings));
 
-  let questions = combineQuestionsFromSheets(settings);
+  // const settings = parseSourceSheetsSettings();
 
-  questions = questions.sort(() => Math.random() - 0.5);
+  // let questions = combineQuestionsFromSourceSheets(settings);
 
-  const varAmounts = Math.ceil(questions.length / varSize);
+  // questions = questions.sort(() => Math.random() - 0.5);
 
-  for (let i = 0; i < varAmounts; i++) {
-    const slice = questions.slice(i * varSize, (i + 1) * varSize);
-    createVariantSheet(slice);
-  }
+  // const varAmounts = Math.ceil(questions.length / varSize);
+
+  // for (let i = 0; i < varAmounts; i++) {
+  //   const slice = questions.slice(i * varSize, (i + 1) * varSize);
+  //   createVariantSheet(slice);
+  // }
 }
 
 function createVariantSheet(quests: CombinedQuiestion[]) {
@@ -30,31 +34,4 @@ function createVariantSheet(quests: CombinedQuiestion[]) {
   quests.forEach((q, idx) => {
     console.log(JSON.stringify({ i: idx + 1, t: q.sheetTitle, n: q.number }));
   });
-}
-
-interface VariantsSetting {
-  sheetId: string;
-  sheetTitle: string;
-  questTypes?: QuestionType[];
-}
-
-function parseVariantsSettings(): VariantsSetting[] {
-  const VARIANTS_DOCS_SH_NAME = 'VariantsDocs';
-  const sheet = SpreadsheetApp.getActive().getSheetByName(VARIANTS_DOCS_SH_NAME);
-  const [titlesRow, ...rows] = sheet!.getDataRange().getValues();
-  const settings: VariantsSetting[] = [];
-
-  rows.forEach((row) => {
-    const [sheetId, sheetTitle, questTypesStr] = row;
-    const setting: VariantsSetting = {
-      sheetId,
-      sheetTitle,
-    };
-    if (questTypesStr) {
-      setting.questTypes = questTypesStr.split(';').map((x) => questionTypesMap[x.trim()]);
-    }
-    settings.push(setting);
-  });
-
-  return settings;
 }
