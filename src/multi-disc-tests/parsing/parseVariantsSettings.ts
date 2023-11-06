@@ -5,7 +5,7 @@ export interface VariantSettings {
 export interface VariantsSettings {
   variantsAmount: number;
   discNames: string[];
-  settings: {
+  variants: {
     [testName: string]: VariantSettings;
   };
 }
@@ -24,12 +24,12 @@ export function parseVariantsSettings(): VariantsSettings {
   const result: VariantsSettings = {
     variantsAmount,
     discNames: [],
-    settings: {},
+    variants: {},
   };
 
   variantsRows.forEach(([testName, questsStr]) => {
     const variant = parseQuestStr(questsStr);
-    result.settings[testName.trim()] = variant;
+    result.variants[testName.trim()] = variant;
 
     Object.keys(variant).forEach((discName) => {
       if (!result.discNames.includes(discName)) {

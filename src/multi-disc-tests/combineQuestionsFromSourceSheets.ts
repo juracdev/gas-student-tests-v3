@@ -9,7 +9,7 @@ export type CombinedQuiestion = Question & { sheetTitle: string };
 export function combineQuestionsFromSourceSheets(options: SourceSheetsSettings[]): CombinedQuiestion[] {
   const result: CombinedQuiestion[] = [];
 
-  options.forEach(({ sheetId, sheetTitle, questTypes }) => {
+  options.forEach(({ sheetId, discName: sheetTitle, questTypes }) => {
     let questions = parseQuestionSheet(sheetId);
 
     if (questTypes && questTypes.length > 0) {

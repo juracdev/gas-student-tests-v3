@@ -2,7 +2,7 @@ import { QuestionType, questionTypesMap } from '../../models/Question';
 
 export interface SourceSheetsSettings {
   sheetId: string;
-  sheetTitle: string;
+  discName: string;
   questTypes?: QuestionType[];
 }
 
@@ -13,10 +13,10 @@ export function parseSourceSheetsSettings(): SourceSheetsSettings[] {
   const settings: SourceSheetsSettings[] = [];
 
   rows.forEach((row) => {
-    const [sheetId, sheetTitle, questTypesStr] = row;
+    const [sheetId, dicsName, questTypesStr] = row;
     const setting: SourceSheetsSettings = {
       sheetId,
-      sheetTitle: sheetTitle.toLowerCase(),
+      discName: dicsName.toLowerCase(),
     };
     if (questTypesStr) {
       setting.questTypes = questTypesStr.split(';').map((x) => questionTypesMap[x.trim()]);

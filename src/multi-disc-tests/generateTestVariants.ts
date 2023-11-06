@@ -1,29 +1,56 @@
 import { generateQuestionsSheet } from '../test-generation/generateQuestionsSheet';
 import { createSheet } from '../utils/sheetUtils';
 import { CombinedQuiestion, combineQuestionsFromSourceSheets } from './combineQuestionsFromSourceSheets';
+import { DiscQuestionsAmounts, VariantsSchemes, createVariantsSchemes } from './createVariantsSchemes';
+import { DiscQuiestion, parseSourceSheetsQuestions } from './parsing/parseSourceSheetsQuestions';
 import { parseSourceSheetsSettings } from './parsing/parseSourceSheetsSettings';
 import { parseVariantsSettings } from './parsing/parseVariantsSettings';
+import { VariantQuestions, populateVariantsShemes } from './populateVariantsShemes';
 
 // TODO
 // Сделать выбор директории
 // Сделать размер варианта внешним параметром
 
 export function generateTestVariants(varSize: number) {
-  const settings = parseVariantsSettings();
-  console.log(JSON.stringify(settings));
+  const variantSettings = parseVariantsSettings();
+  console.log(JSON.stringify(variantSettings));
 
-  // const settings = parseSourceSheetsSettings();
+  const ssSettings = parseSourceSheetsSettings();
+  const ssQuestions = parseSourceSheetsQuestions(ssSettings);
 
-  // let questions = combineQuestionsFromSourceSheets(settings);
+  const ssQuestionsAmounts: DiscQuestionsAmounts = Object.entries(ssQuestions).reduce((acc, [key, values]) => {
+    acc[key] = values.length;
+    return acc;
+  }, {});
 
-  // questions = questions.sort(() => Math.random() - 0.5);
+  const schemes = createVariantsSchemes(variantSettings, ssQuestionsAmounts);
 
-  // const varAmounts = Math.ceil(questions.length / varSize);
+  console.log(JSON.stringify(schemes));
 
-  // for (let i = 0; i < varAmounts; i++) {
-  //   const slice = questions.slice(i * varSize, (i + 1) * varSize);
-  //   createVariantSheet(slice);
-  // }
+  const variantQuestions = populateVariantsShemes(schemes, ssQuestions);
+
+  createVariantsSheets(variantQuestions);
+}
+
+function createVariantsSheets(vartiantQuestionsArray: VariantQuestions[]): void {
+  vartiantQuestionsArray.forEach((variantQuestion, variantIdx) => {
+    Object.entries(variantQuestion).forEach(([testName, variant]) => {
+      let testQuestions: DiscQuiestion[] = [];
+      Object.values(variant).forEach((quests) => {
+        testQuestions.push(...quests);
+      });
+      testQuestions = testQuestions.sort(() => Math.random() - 0.5);
+
+      const sheetName = `${testName}. Вариант${variantIdx + 1}`;
+      const sheet = createSheet({ dirId: '1hVw9I8Tvi_-twUsMbu0s0fyd07XfEvPp', title: sheetName });
+      generateQuestionsSheet(testQuestions, sheet.getId());
+
+      console.log(`=== ${sheetName} ===`);
+      testQuestions.forEach((q, idx) => {
+        console.log(JSON.stringify({ i: idx + 1, disc: q.discName, n: q.number }));
+      });
+    });
+  });
 }
 
 function createVariantSheet(quests: CombinedQuiestion[]) {
